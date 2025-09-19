@@ -35,9 +35,18 @@ export default function Login() {
       });
 
       if (response.status === 200) {
+        const user = response.data.user;
+
         toast.success("Login successful!");
-        
-        router.push("/dashboard");
+
+        // ✅ Redirect based on role
+        if (user.role === "ADMIN") {
+          router.push("/adminDashboard");
+        } else if (user.role === "VIEWER") {
+          router.push("/viewer");
+        } else {
+          router.push("/dashboard"); // default
+        }
       } else {
         toast.error(response.data?.error || "Login failed");
       }

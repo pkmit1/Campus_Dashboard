@@ -7,7 +7,7 @@ export default function Hero() {
     <div className="pt-24 px-10 flex flex-col md:flex-row items-center justify-between gap-10 relative">
       {/* Left Content */}
       <div className="max-w-xl space-y-6">
-        {/* Gradient Badge with Brain Icon + Text */}
+ 
         <div className="relative inline-block group">
           {/* Glow Effect */}
           <div className="absolute inset-0 rounded-full bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 p-[2px] blur-md opacity-70 group-hover:opacity-100 transition"></div>

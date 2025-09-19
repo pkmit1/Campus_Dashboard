@@ -13,7 +13,7 @@ export default function SignUp() {
     setLoading(true);
     try {
       const response = await axios.post("/api/auth/signUp", {
-        name: fullname,   // 👈 send as "name" to match backend
+        name: fullname,   
         email,
         password,
       });

@@ -1,4 +1,3 @@
-// app/api/auth/login/route.ts
 import { NextResponse } from "next/server";
 import { prisma } from "../../../lib/prisma";
 import { verify } from "@node-rs/argon2";
@@ -10,8 +9,18 @@ export async function POST(request: Request) {
   try {
     const { email, password } = await request.json();
 
-    // 1. Find user
-    const user = await prisma.user.findUnique({ where: { email } });
+    // 1. Find user (fetching role too if needed)
+    const user = await prisma.user.findUnique({
+      where: { email },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true, // ✅ include role
+        password: true,
+      },
+    });
+
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
@@ -22,8 +31,12 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Invalid password" }, { status: 401 });
     }
 
-    // 3. Create JWT
-    const token = await new SignJWT({ userId: user.id, email: user.email })
+    // 3. Create JWT (with role)
+    const token = await new SignJWT({
+      userId: user.id,
+      email: user.email,
+      role: user.role, // ✅ add role in token payload
+    })
       .setProtectedHeader({ alg: "HS256" })
       .setIssuedAt()
       .setExpirationTime("1h")
@@ -33,9 +46,10 @@ export async function POST(request: Request) {
     const { password: _password, ...safeUser } = user;
 
     const response = NextResponse.json(
-        { message: "Login successful", user: safeUser },
-        { status: 200 }
+      { message: "Login successful", user: safeUser },
+      { status: 200 }
     );
+  
 
     response.cookies.set("token", token, {
       httpOnly: true,
