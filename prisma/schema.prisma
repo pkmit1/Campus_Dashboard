@@ -13,7 +13,7 @@ model user {
   name     String
   email    String   @unique
   password String
-  role     UserRole @default(VIEWER)
+  role     UserRole @default(ADMIN)
 }
 
 model ContactMessage {
