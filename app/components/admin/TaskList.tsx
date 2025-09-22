@@ -35,7 +35,7 @@ export default function TaskList({ notifications }: { notifications: Notificatio
               <p className="text-md font-medium text-indigo-400 mb-1">{item.subject}</p>
               <p className="text-sm text-gray-300 mb-2 truncate">{item.message}</p>
               <p className="text-sm text-gray-300 mb-1">
-                Status: <span className={`font-semibold ${item.status === "completed" ? "text-green-400" : "text-yellow-400"}`}>{item.status || "Pending"}</span>
+                Status: <span className={`font-semibold ${item.status === "completed" ? "text-green-400" :item.status==="pending"? "text-red-400":"text-yellow-400"}`}>{item.status || "Pending"}</span>
               </p>
               {item.conversation && (
                 <p className="text-sm text-blue-400 truncate">
