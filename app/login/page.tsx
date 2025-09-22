@@ -43,7 +43,7 @@ export default function Login() {
         if (user.role === "ADMIN") {
           router.push("/adminDashboard");
         } else if (user.role === "VIEWER") {
-          router.push("/viewer");
+          router.push("/");
         } else {
           router.push("/dashboard"); // default
         }
@@ -58,7 +58,7 @@ export default function Login() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-6 py-12 bg-gray-200">
+    <div className="flex min-h-screen items-center justify-center px-6 py-12 bg-gray-800">
       <div className="w-full sm:max-w-md space-y-8 border-2 border-black rounded-lg p-8 bg-white">
         <h2 className="text-3xl font-extrabold text-center">Sign In</h2>
 

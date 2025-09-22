@@ -8,7 +8,7 @@ export default function Navbar() {
     { name: "Home", href: "#" },
     { name: "Features", href: "#features" },
     { name: "Process", href: "#process" },
-    { name: "Contact", href: "#contact" },
+    { name: "Contact", href: "/contact" },
   ];
 
   return (

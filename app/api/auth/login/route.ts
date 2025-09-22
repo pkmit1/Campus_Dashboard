@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "../../../lib/prisma";
 import { verify } from "@node-rs/argon2";
-import { SignJWT } from "jose";
+import {generateToken} from "../../../../utils/jwt"
 
 const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 
@@ -32,15 +32,12 @@ export async function POST(request: Request) {
     }
 
     // 3. Create JWT (with role)
-    const token = await new SignJWT({
+    const token = await  generateToken({
       userId: user.id,
       email: user.email,
       role: user.role, // ✅ add role in token payload
     })
-      .setProtectedHeader({ alg: "HS256" })
-      .setIssuedAt()
-      .setExpirationTime("1h")
-      .sign(secret);
+     
 
     // 4. Return response + cookie
     const { password: _password, ...safeUser } = user;
@@ -55,7 +52,7 @@ export async function POST(request: Request) {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
-      maxAge: 60 * 60, // 1 hour
+      maxAge: 7 * 24 * 60 * 60, 
       path: "/",
     });
 
