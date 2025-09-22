@@ -52,7 +52,7 @@ export const columns: ColumnDef<User>[] = [
   },
   {
     accessorKey: "role",
-    header: "Role", // No sorting arrows for Role
+    header: "Role", 
     cell: ({ row }) => {
       const role = row.getValue("role") as string
       return (

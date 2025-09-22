@@ -5,20 +5,34 @@ import { verifyToken } from "./utils/jwt";
 export async function middleware(request: NextRequest) {
   const token = request.cookies.get("token")?.value;
 
-  if (!token) {
-    console.log("⛔ No token, redirecting to login");
-    return NextResponse.redirect(new URL("/login", request.url));
+ 
+  const decodeToken = await verifyToken(token);
+
+
+
+
+  // 🔒 Role-based protection
+  const path = request.nextUrl.pathname;
+  if(path.startsWith("/api/auth") ){
+return NextResponse.next();
   }
 
-  const decodeToken = await verifyToken(token);
+    if(path.startsWith("/api" ) && !decodeToken){
+    return NextResponse.redirect(new URL("/unauthorized", request.url));
+  }
+
 
   if (!decodeToken) {
     console.log("⛔ Invalid token, redirecting to login");
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  // 🔒 Role-based protection
-  const path = request.nextUrl.pathname;
+
+   if (!token) {
+    console.log("⛔ No token, redirecting to login");
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
+
 
   if (path.startsWith("/adminDashboard") && decodeToken.role !== "ADMIN") {
     console.log("⛔ Access denied: not an admin");
@@ -41,5 +55,9 @@ export async function middleware(request: NextRequest) {
 
 // Apply middleware only on these routes
 export const config = {
-  matcher: ["/adminDashboard/:path*", "/viewer/:path*", "/editor/:path*"],
+  matcher: ["/adminDashboard/:path*", 
+    "/viewer/:path*", 
+    "/editor/:path*", 
+    "/api/:path*",
+    "/api/auth/:path*"],
 };

@@ -4,8 +4,17 @@ import { useReactTable, getCoreRowModel, getPaginationRowModel, getSortedRowMode
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react"
 import Pagination from "./Pagination" 
+import toast from "react-hot-toast";
 
-interface Request { id: number; name: string; email: string; subject: string; message: string; status: string; conversation: string }
+interface Request { 
+    id: number; 
+    name: string; 
+    email: string; 
+    subject: string; 
+    message: string; 
+    status: string; 
+    conversation: string 
+}
 interface Props {
   requests: Request[]
   loading: boolean
@@ -17,6 +26,19 @@ interface Props {
 }
 
 export default function TableComponent({ requests, loading, sorting, setSorting, handleStatusUpdate, setEditing, setEditedConversation }: Props) {
+  // ✅ status change wrapper with toast
+  const handleStatusChange = (id: number, newStatus: string) => {
+    handleStatusUpdate(id, newStatus); // your original update logic
+
+    if (newStatus === "in progress") {
+      toast.success("Status changed to In Progress");
+    } else if (newStatus === "completed") {
+      toast.success("Status changed to Completed");
+    } else if (newStatus === "pending") {
+      toast("Status reverted to Pending");
+    }
+  };
+
   const columns: ColumnDef<Request>[] = [
     { header: "S.No", cell: ({ row }) => row.index + 1 },
     {
@@ -85,12 +107,35 @@ export default function TableComponent({ requests, loading, sorting, setSorting,
                   <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                 ))}
                 <TableCell className="text-right space-x-2">
-                  <select value={row.original.status} onChange={(e) => handleStatusUpdate(row.original.id, e.target.value)} className="bg-gray-800 border border-gray-600 rounded px-2 py-1 text-sm">
-                    {row.original.status === "pending" && <option value="pending">Pending</option>}
-                    <option value="in progress">In Progress</option>
-                    <option value="completed">Completed</option>
+                  <select
+                    value={row.original.status}
+                    onChange={(e) => handleStatusChange(row.original.id, e.target.value)}
+                    className="bg-gray-800 border border-gray-600 rounded px-2 py-1 text-sm"
+                  >
+                    {row.original.status === "pending" && (
+                        <>
+                          <option value="pending">Pending</option>
+                          <option value="in progress">In Progress</option>
+                          <option value="completed">Completed</option>
+                        </>
+                    )}
+                    {row.original.status==="in progress" && (
+                        <>
+                        <option value="in progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                        </>
+                    )}
+                    {row.original.status==="completed" &&(
+                        <>
+                        <option value="completed">Completed</option>
+                        </>
+                    )}
+                    
                   </select>
-                  <button className="px-3 py-1 rounded bg-blue-600 text-white hover:bg-blue-700 transition ml-2" onClick={() => { setEditing(row.original); setEditedConversation(row.original.conversation || "") }}>
+                  <button
+                    className="px-3 py-1 rounded bg-blue-600 text-white hover:bg-blue-700 transition ml-2"
+                    onClick={() => { setEditing(row.original); setEditedConversation(row.original.conversation || "") }}
+                  >
                     Edit Conversation
                   </button>
                 </TableCell>

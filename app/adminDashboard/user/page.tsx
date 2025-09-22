@@ -61,11 +61,11 @@ export default function UserTableAllNative() {
     <div className="min-h-screen bg-gray-950 text-white flex flex-col">
       <Navbar />
       <div className="flex-1 p-4 md:p-6 space-y-6">
-        <h1 className="text-2xl md:text-3xl font-bold text-center bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
-          👤 User Management
-        </h1>
-
-        <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} totalUsers={users.length} />
+        <SearchInput 
+        searchTerm={searchTerm} 
+        setSearchTerm={setSearchTerm} 
+        totalUsers={users.length} 
+        />
 
         <div className="overflow-hidden rounded-md border  border-gray-800">
           <Table>

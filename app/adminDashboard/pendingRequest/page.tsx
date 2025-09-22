@@ -30,14 +30,16 @@ const columns: ColumnDef<Request>[] = [
     cell: ({ row }) => row.index + 1
   },
   {
-    accessorKey: "name",
-    header: ({ column }) => (
-      <button className="flex items-center gap-1" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-        Name
-        {column.getIsSorted() === "asc" ? <ArrowUp className="h-4 w-4" /> :
-         column.getIsSorted() === "desc" ? <ArrowDown className="h-4 w-4" /> :
-         <ArrowUpDown className="h-4 w-4" />}
-      </button>
+    accessorKey:"name",
+    header:({ column })=>(
+    <button className="flex items-center gap-1"
+    onClick={()=>column.toggleSorting(column.getIsSorted()==="asc")}>
+      Name
+      {column.getIsSorted()==="asc"? <ArrowUp className="h-4 w-4"/>:
+      column.getIsSorted()==="desc"? <ArrowDown className="h-4 w-4"/>:
+      <ArrowUpDown className="h-4 w-4"/>
+      }  
+    </button>  
     )
   },
   {
@@ -99,7 +101,7 @@ export default function PendingRequests() {
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    initialState: { pagination: { pageSize: 5 } }
+    initialState: { pagination: { pageSize: 10 } }
   })
 
   const handleStatusUpdate = async (id: number, newStatus: string) => {
@@ -122,8 +124,8 @@ export default function PendingRequests() {
 
         {/* Search */}
         <div className="px-10 mt-10 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="text-3xl font-bold bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-            Total Messages: {filteredRequests.length}
+          <div className="text-2xl font-bold bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+            Total Pending status Messages: {filteredRequests.length}
           </div>
           <div className="flex items-center gap-2 w-full max-w-md">
             <Search className="text-gray-400" />
@@ -211,7 +213,7 @@ export default function PendingRequests() {
                   onChange={(e) => table.setPageSize(Number(e.target.value))}
                   className="h-8 w-[70px] text-black rounded border border-input bg-background px-3 py-1 text-sm"
                 >
-                  {[5, 10, 20, 50].map(size => (
+                  {[10, 20, 50, 100].map(size => (
                     <option key={size} value={size}>{size}</option>
                   ))}
                 </select>
@@ -219,6 +221,9 @@ export default function PendingRequests() {
               <div className="flex items-center text-black space-x-2">
                 <button className="px-2 py-1 border bg-blue-400 rounded disabled:opacity-50" onClick={() => table.setPageIndex(0)} disabled={!table.getCanPreviousPage()}>First</button>
                 <button className="px-2 py-1 border bg-blue-400 rounded disabled:opacity-50" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>Prev</button>
+                <span className="text-sm text-white">
+                Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+                </span>
                 <button className="px-2 py-1 border bg-blue-400 rounded disabled:opacity-50" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>Next</button>
                 <button className="px-2 py-1 border bg-blue-400 rounded disabled:opacity-50" onClick={() => table.setPageIndex(table.getPageCount()-1)} disabled={!table.getCanNextPage()}>Last</button>
               </div>

@@ -1,15 +1,33 @@
-"use client"
+"use client";
+
+import toast from "react-hot-toast";
 
 interface Props {
-  editingUser: any
-  newRole: string
-  setNewRole: (value: string) => void
-  onClose: () => void
-  onSave: () => void
+  editingUser: any;
+  newRole: string;
+  setNewRole: (value: string) => void;
+  onClose: () => void;
+  onSave: () => void;
 }
 
 export default function EditRoleModal({ editingUser, newRole, setNewRole, onClose, onSave }: Props) {
-  if (!editingUser) return null
+
+  if (!editingUser) return null;
+
+  const handleSave = () => {
+    if (!editingUser) {
+      toast.error("User Role not Updated");
+      return;
+    }
+
+    try {
+      onSave(); 
+      toast.success("User Role updated");
+      onClose(); 
+    } catch (error) {
+      toast.error("Failed to update User Role");
+    }
+  };
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/70 z-50">
@@ -24,7 +42,7 @@ export default function EditRoleModal({ editingUser, newRole, setNewRole, onClos
         >
           <option value="ADMIN">ADMIN</option>
           <option value="EDITOR">EDITOR</option>
-          <option value="USER">USER</option>
+          <option value="VIEWER">VIEWER</option>
         </select>
         <div className="flex justify-end gap-2 mt-4">
           <button
@@ -35,12 +53,12 @@ export default function EditRoleModal({ editingUser, newRole, setNewRole, onClos
           </button>
           <button
             className="px-4 py-2 bg-green-600 rounded hover:bg-green-700"
-            onClick={onSave}
+            onClick={handleSave}
           >
             Save
           </button>
         </div>
       </div>
     </div>
-  )
+  );
 }

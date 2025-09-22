@@ -36,6 +36,9 @@ export default function Pagination({ table }: Props) {
         >
           Previous
         </button>
+        <span className="text-sm text-white">
+          Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+        </span>
         <button
           className="px-2 py-1 border bg-blue-400 cursor-pointer rounded disabled:opacity-50"
           onClick={() => table.nextPage()}
